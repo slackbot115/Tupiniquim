@@ -33,10 +33,6 @@ namespace Tupiniquim.ConsoleApp
                 Posição inicial fora do escopo do grid
 
              */
-            string grid_total = "";
-            int pos_atual_x = 0, pos_atual_y = 0;
-            string direcao_atual = "";
-            string instrucoes = "";
 
             Console.WriteLine("   +--------------+\n" +
                 "   |.------------.|\n" +
@@ -65,6 +61,11 @@ namespace Tupiniquim.ConsoleApp
                     {
                         while (true)
                         {
+                            string grid_total = "";
+                            string posicao_inicial = "";
+                            string direcao_atual = "";
+                            string instrucoes = "";
+
                             Console.Clear();
                             Console.WriteLine("Bem vindo a central de controle da AEB - Aguardando instruções...");
                             Console.Write("Digite as coordenadas do campo total (Ex: 5 5): ");
@@ -74,11 +75,13 @@ namespace Tupiniquim.ConsoleApp
                             char[] grid_string = grid_spaces.ToCharArray();
                             int[] grid_final = Array.ConvertAll(grid_string, c => (int)Char.GetNumericValue(c));
 
-                            Console.WriteLine("Digite a posição inicial do robô"); // Fazer ele receber com uma linha só
-                            Console.Write("X: ");
-                            pos_atual_x = int.Parse(Console.ReadLine());
-                            Console.Write("Y: ");
-                            pos_atual_y = int.Parse(Console.ReadLine());
+// Fazer receber dois robôs
+                            Console.Write("Digite a posição inicial do robô (Ex: 1 2): "); // Fazer ele receber com uma linha só
+                            posicao_inicial = Console.ReadLine();
+                            string posicao_spaces = posicao_inicial.Replace(" ", "");
+                            char[] posicao_string = posicao_spaces.ToCharArray();
+                            int[] posicao_final = Array.ConvertAll(posicao_string, c => (int)Char.GetNumericValue(c));
+
                             Console.Write("Digite a direção inicial do robô: "); // Fazer receber um char
                             direcao_atual = Console.ReadLine().ToUpper();
                             Console.Write("Digite as instruções para o robô: ");
@@ -86,46 +89,45 @@ namespace Tupiniquim.ConsoleApp
 
                             char[] instrucoes_char = instrucoes.ToCharArray();
 
-                            int[] pos_final = { pos_atual_x, pos_atual_y };
-
                             for (int i = 0; i < instrucoes_char.Length; i++)
                             {
                                 if (instrucoes_char[i] == 'M')
                                 {
                                     if (instrucoes_char[i] == 'M' && direcao_atual == "N")
                                     {
-                                        pos_final[1] += 1; // Não pode ultrapassar o limite maximo da grid
-                                        if (pos_final[1] >= grid_final[1])
+                                        posicao_final[1] += 1; // Não pode ultrapassar o limite maximo da grid
+                                        if (posicao_final[1] >= grid_final[1])
                                         {
-                                            pos_final[1]--;
-                                            Console.WriteLine("Ultrapassando o limite de {0}\nCoordenada atual de Y: {1}", grid_final[1], pos_final[1]);
+                                            posicao_final[1]--;
+                                            Console.WriteLine("Ultrapassando o limite de {0}\nCoordenada atual de Y: {1}", grid_final[1], posicao_final[1]);
                                         }
                                     }
+// Colocar cores nos limites
                                     else if (instrucoes_char[i] == 'M' && direcao_atual == "S")
                                     {
-                                        pos_final[1] -= 1; //Não pode ser menor que 0
-                                        if (pos_final[1] <= 0)
+                                        posicao_final[1] -= 1; //Não pode ser menor que 0
+                                        if (posicao_final[1] < 0)
                                         {
-                                            pos_final[1]++;
-                                            Console.WriteLine("Ultrapassando o limite minimo (0)\nCoordenada atual de Y: {0}", pos_final[1]);
+                                            posicao_final[1]++;
+                                            Console.WriteLine("Ultrapassando o limite minimo (0)\nCoordenada atual de Y: {0}", posicao_final[1]);
                                         }
                                     }
                                     else if (instrucoes_char[i] == 'M' && direcao_atual == "L")
                                     {
-                                        pos_final[0] += 1; // Não pode ultrapassar o limite maximo da grid
-                                        if (pos_final[0] >= grid_final[0])
+                                        posicao_final[0] += 1; // Não pode ultrapassar o limite maximo da grid
+                                        if (posicao_final[0] >= grid_final[0])
                                         {
-                                            pos_final[0]--;
-                                            Console.WriteLine("Ultrapassando o limite de {0}\nCoordenada atual de Y: {1}", grid_final[0], pos_final[0]);
+                                            posicao_final[0]--;
+                                            Console.WriteLine("Ultrapassando o limite de {0}\nCoordenada atual de Y: {1}", grid_final[0], posicao_final[0]);
                                         }
                                     }
                                     else if (instrucoes_char[i] == 'M' && direcao_atual == "O")
                                     {
-                                        pos_final[0] -= 1; //Não pode ser menor que 0
-                                        if (pos_final[0] <= 0)
+                                        posicao_final[0] -= 1; //Não pode ser menor que 0
+                                        if (posicao_final[0] < 0)
                                         {
-                                            pos_final[0]++;
-                                            Console.WriteLine("Ultrapassando o limite minimo (0)\nCoordenada atual de Y: {0}", pos_final[0]);
+                                            posicao_final[0]++;
+                                            Console.WriteLine("Ultrapassando o limite minimo (0)\nCoordenada atual de Y: {0}", posicao_final[0]);
                                         }
                                     }
                                 }
@@ -172,8 +174,9 @@ namespace Tupiniquim.ConsoleApp
                                     continue;
                                 }
                             }
-                            Console.WriteLine("Posição X final: " + pos_final[0]);
-                            Console.WriteLine("Posição Y final: " + pos_final[1]);
+// Colocar cores nos resultados
+                            Console.WriteLine("\n\nPosição X final: " + posicao_final[0]);
+                            Console.WriteLine("Posição Y final: " + posicao_final[1]);
                             Console.WriteLine("Direção final: " + direcao_atual);
                             while (true)
                             {

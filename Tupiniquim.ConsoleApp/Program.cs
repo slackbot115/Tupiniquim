@@ -15,7 +15,6 @@ namespace Tupiniquim.ConsoleApp
 
     internal class Program
     {
-
         static void Main(string[] args)
         {
             /*
@@ -68,11 +67,12 @@ namespace Tupiniquim.ConsoleApp
                         {
                             Console.Clear();
                             Console.WriteLine("Bem vindo a central de controle da AEB - Aguardando instruções...");
-                            Console.Write("Digite as coordenadas do campo total: ");
+                            Console.Write("Digite as coordenadas do campo total (Ex: 5 5): ");
                             // Formatando as coordenadas
                             grid_total = Console.ReadLine();
-                            string grid_spaces = string.Concat(grid_total.Where(c => !char.IsWhiteSpace(c)));
-                            char[] grid_final = grid_spaces.ToCharArray();
+                            string grid_spaces = grid_total.Replace(" ", "");
+                            char[] grid_string = grid_spaces.ToCharArray();
+                            int[] grid_final = Array.ConvertAll(grid_string, c => (int)Char.GetNumericValue(c));
 
                             Console.WriteLine("Digite a posição inicial do robô"); // Fazer ele receber com uma linha só
                             Console.Write("X: ");
@@ -94,7 +94,7 @@ namespace Tupiniquim.ConsoleApp
                                 {
                                     if (instrucoes_char[i] == 'M' && direcao_atual == "N")
                                     {
-                                        pos_final[1] += 1;
+                                        pos_final[1] += 1; // Não pode ultrapassar o limite maximo da grid
                                         if (pos_final[1] >= grid_final[1])
                                         {
                                             pos_final[1]--;
@@ -104,10 +104,15 @@ namespace Tupiniquim.ConsoleApp
                                     else if (instrucoes_char[i] == 'M' && direcao_atual == "S")
                                     {
                                         pos_final[1] -= 1; //Não pode ser menor que 0
+                                        if (pos_final[1] <= 0)
+                                        {
+                                            pos_final[1]++;
+                                            Console.WriteLine("Ultrapassando o limite minimo (0)\nCoordenada atual de Y: {0}", pos_final[1]);
+                                        }
                                     }
                                     else if (instrucoes_char[i] == 'M' && direcao_atual == "L")
                                     {
-                                        pos_final[0] += 1;
+                                        pos_final[0] += 1; // Não pode ultrapassar o limite maximo da grid
                                         if (pos_final[0] >= grid_final[0])
                                         {
                                             pos_final[0]--;
@@ -117,6 +122,11 @@ namespace Tupiniquim.ConsoleApp
                                     else if (instrucoes_char[i] == 'M' && direcao_atual == "O")
                                     {
                                         pos_final[0] -= 1; //Não pode ser menor que 0
+                                        if (pos_final[0] <= 0)
+                                        {
+                                            pos_final[0]++;
+                                            Console.WriteLine("Ultrapassando o limite minimo (0)\nCoordenada atual de Y: {0}", pos_final[0]);
+                                        }
                                     }
                                 }
                                 else if (instrucoes_char[i] == 'E')

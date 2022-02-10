@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace Tupiniquim.ConsoleApp
 {
@@ -41,7 +40,6 @@ namespace Tupiniquim.ConsoleApp
                 Possiveis bugs:
                 Digitar um item invalido durante a sequencia de instruções
                 Posição inicial fora do escopo do grid
-
              */
 
             Console.WriteLine("   +--------------+\n" +
@@ -83,10 +81,25 @@ namespace Tupiniquim.ConsoleApp
                             grid_total = Console.ReadLine();
                             int[] grid_final = formatarString(grid_total);
 
-// Fazer receber dois robôs
                             Console.Write("\nDigite a posição inicial do robô (Ex: 1 2): ");
                             posicao_inicial = Console.ReadLine();
                             int[] posicao_final = formatarString(posicao_inicial);
+                            if(posicao_final[0] > grid_final[0] || posicao_final[1] > grid_final[1])
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Posição inicial maior que o campo total, aperte qualquer tecla para digitar novamente...");
+                                Console.ReadKey();
+                                Console.ResetColor();
+                                continue;
+                            }
+                            else if(posicao_final[0] < 0 || posicao_final[1] < 0)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Posição inicial menor que o campo total, aperte qualquer tecla para digitar novamente...");
+                                Console.ReadKey();
+                                Console.ResetColor();
+                                continue;
+                            }
 
                             Console.Write("\nOrientação do robô N = norte, S = sul, L = leste, O = oeste\nDigite a direção inicial do robô (Ex: N): ");
                             direcao_atual = Console.ReadLine().ToUpper();
@@ -217,8 +230,10 @@ namespace Tupiniquim.ConsoleApp
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Ocorreu um erro, digite novamente...");
                     Console.ResetColor();
+                    break;
                 }
             }
+            Console.WriteLine("Fechando o programa...");
         }
     }
 }

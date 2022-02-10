@@ -15,6 +15,16 @@ namespace Tupiniquim.ConsoleApp
 
     internal class Program
     {
+        public static int[] formatarString(string input)
+        {
+            // Formatando os inputs de string
+            string input_spaces = input.Replace(" ", "");
+            char[] input_new_string = input_spaces.ToCharArray();
+            int[] input_final = Array.ConvertAll(input_new_string, c => (int)Char.GetNumericValue(c));
+
+            return input_final;
+        }
+
         static void Main(string[] args)
         {
             /*
@@ -69,22 +79,18 @@ namespace Tupiniquim.ConsoleApp
                             Console.Clear();
                             Console.WriteLine("Bem vindo a central de controle da AEB - Aguardando instruções...");
                             Console.Write("Digite as coordenadas do campo total (Ex: 5 5): ");
-                            // Formatando as coordenadas
+                            
                             grid_total = Console.ReadLine();
-                            string grid_spaces = grid_total.Replace(" ", "");
-                            char[] grid_string = grid_spaces.ToCharArray();
-                            int[] grid_final = Array.ConvertAll(grid_string, c => (int)Char.GetNumericValue(c));
+                            int[] grid_final = formatarString(grid_total);
 
 // Fazer receber dois robôs
-                            Console.Write("Digite a posição inicial do robô (Ex: 1 2): "); // Fazer ele receber com uma linha só
+                            Console.Write("\nDigite a posição inicial do robô (Ex: 1 2): ");
                             posicao_inicial = Console.ReadLine();
-                            string posicao_spaces = posicao_inicial.Replace(" ", "");
-                            char[] posicao_string = posicao_spaces.ToCharArray();
-                            int[] posicao_final = Array.ConvertAll(posicao_string, c => (int)Char.GetNumericValue(c));
+                            int[] posicao_final = formatarString(posicao_inicial);
 
-                            Console.Write("Digite a direção inicial do robô: "); // Fazer receber um char
+                            Console.Write("\nOrientação do robô N = norte, S = sul, L = leste, O = oeste\nDigite a direção inicial do robô (Ex: N): ");
                             direcao_atual = Console.ReadLine().ToUpper();
-                            Console.Write("Digite as instruções para o robô: ");
+                            Console.Write("\nInstruções: E - 90 graus para esquerda, D - 90 graus para direita e M - se mover na direção que estiver olhando.\nDigite as instruções para o robô (Ex: EMEMEMEMM): ");
                             instrucoes = Console.ReadLine().ToUpper();
 
                             char[] instrucoes_char = instrucoes.ToCharArray();
@@ -93,16 +99,16 @@ namespace Tupiniquim.ConsoleApp
                             {
                                 if (instrucoes_char[i] == 'M')
                                 {
+                                    Console.ForegroundColor = ConsoleColor.Red;
                                     if (instrucoes_char[i] == 'M' && direcao_atual == "N")
                                     {
                                         posicao_final[1] += 1; // Não pode ultrapassar o limite maximo da grid
-                                        if (posicao_final[1] >= grid_final[1])
+                                        if (posicao_final[1] > grid_final[1])
                                         {
                                             posicao_final[1]--;
                                             Console.WriteLine("Ultrapassando o limite de {0}\nCoordenada atual de Y: {1}", grid_final[1], posicao_final[1]);
                                         }
                                     }
-// Colocar cores nos limites
                                     else if (instrucoes_char[i] == 'M' && direcao_atual == "S")
                                     {
                                         posicao_final[1] -= 1; //Não pode ser menor que 0
@@ -115,7 +121,7 @@ namespace Tupiniquim.ConsoleApp
                                     else if (instrucoes_char[i] == 'M' && direcao_atual == "L")
                                     {
                                         posicao_final[0] += 1; // Não pode ultrapassar o limite maximo da grid
-                                        if (posicao_final[0] >= grid_final[0])
+                                        if (posicao_final[0] > grid_final[0])
                                         {
                                             posicao_final[0]--;
                                             Console.WriteLine("Ultrapassando o limite de {0}\nCoordenada atual de Y: {1}", grid_final[0], posicao_final[0]);
@@ -130,6 +136,7 @@ namespace Tupiniquim.ConsoleApp
                                             Console.WriteLine("Ultrapassando o limite minimo (0)\nCoordenada atual de Y: {0}", posicao_final[0]);
                                         }
                                     }
+                                    Console.ResetColor();
                                 }
                                 else if (instrucoes_char[i] == 'E')
                                 {
@@ -174,10 +181,11 @@ namespace Tupiniquim.ConsoleApp
                                     continue;
                                 }
                             }
-// Colocar cores nos resultados
+                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("\n\nPosição X final: " + posicao_final[0]);
                             Console.WriteLine("Posição Y final: " + posicao_final[1]);
-                            Console.WriteLine("Direção final: " + direcao_atual);
+                            Console.WriteLine("Direção final: " + direcao_atual + "\n");
+                            Console.ResetColor();
                             while (true)
                             {
                                 try
@@ -196,7 +204,9 @@ namespace Tupiniquim.ConsoleApp
                                 }
                                 catch
                                 {
+                                    Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("Ocorreu um erro, digite novamente...");
+                                    Console.ResetColor();
                                 }
                             }
                         }
@@ -204,7 +214,9 @@ namespace Tupiniquim.ConsoleApp
                 }
                 catch
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Ocorreu um erro, digite novamente...");
+                    Console.ResetColor();
                 }
             }
         }
